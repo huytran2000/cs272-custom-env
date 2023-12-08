@@ -1,0 +1,99 @@
+1/ 
+    x 00 00 00 x    
+++++x 00 00 00 x++++    <- Goal Line
+    x 00 00 00 x    
+    x 00 10 10 x    
+    x 00 00 00 x    
+    x 00 00 00 x    
+    x 10 10 00 x    
+    x 00 00 00 x    
+----x 00 20 00 x----    <- Start Line
+    x 00 00 00 x 
+- standard DQN, normaal reward of -self.dist_to_goal
+-> learned in 13 eps: ./cp_log/tmpnxti8f0o
+
+2/ (same starting map)
+- standard DQN, normal reward of -1
+-> learned in 15 eps (a bit longer): 
+
+3/
+    x 00 00 00 x    
+++++x 00 00 00 x++++    <- Goal Line
+    x 00 00 00 x    
+    x 00 10 10 x    
+    x 00 00 00 x    
+    x 00 00 00 x    
+    x 10 10 00 x    
+    x 00 00 00 x    
+----x 00 20 11 x----    <- Start Line
+    x 00 00 00 x 
+- standard DQN, normal reward of -1 (also tested -self.dict reward but it seems to have slower convergence)
+-> used 15 steps, did not get optimal path but it got like 2nd most optimal: .
+
+4/ 
+    x 00 00 00 x    
+++++x 00 00 00 x++++    <- Goal Line
+    x 00 00 00 x    
+    x 00 10 10 x    
+    x 00 00 00 x    
+    x 00 00 00 x    
+    x 10 10 00 x    
+    x 00 00 00 x    
+----x 11 20 11 x----    <- Start Line
+    x 11 11 11 x 
+- standard DQN, normal reward of -1
+-> used 25 steps, did not get optimal path but it got like 2nd most optimal: ./cp_log/tmpygwxrgz_
+(this was before code change that allows car below agent to move when stuck)
+
+5/ Bc of issues like generated track has no viable path to goal state, only the following are 
+    randomized:
+        Variable goal lane (on r=1), random location of 2 stationary cars on r=3 and r=6, random 
+        location of agent on r=8, 3 random moving cars distributed on r=7,8,9, non-agent car has 10% chance
+        of taking non-dumbAI random action.
+- Using standard DQN, normal reward of -1
+-> trained for 160 iterations, aagent seems not to learn, mean reward hovers aorund -210
+./cp_log/tmpmj08k56f
+
+6/ Tune down the variation, now the only variation is location of Goal_lane with no non-agent car
+    x 00 00 00 x    
+++++x 00 00 00 x++++    <- Goal Line
+    x 00 00 00 x    
+    x 00 10 10 x    
+    x 00 00 00 x    
+    x 00 00 00 x    
+    x 10 10 00 x    
+    x 00 00 00 x    
+----x 00 20 11 x----    <- Start Line
+    x 00 00 00 x 
+- Using DQN, trained for 25 iterations. ALgo learned a good policy: ./cp_log/tmpt5nuadxa
+
+7/ Goal_lane variation + stationary car variations (always 2 cars on each row at r=3,6, but randomly spawned)
+-> Seems to learn ok, but at 50 iterations, it is no where near optimal
+-> ./cp_log/tmpgnxk3v2j
+
+8/ Goal_lane variation + moving car with fixed starting poiint + fixed agent initial position
+. training starting from trained algo from number 6.
+ -> very good learning outcome; trained for 30 iterations.
+ -> ./cp_log/tmp4gqe42tb
+
+ 9/ same as 8, but this time moving non-agent car has random initialal position.
+ . Using DQN, training from trained algo in number 8 for 80 iterations, good mean episode reward (154)
+ -> ./cp_log/tmpjla46v30
+
+ 10/ Goal_lane variation + 1 moving non-agent car with random initial position around agent (with 
+    deterministic action) + random agent intial position (on Start Line only)
+-> Training starting from trained algo in 8; traained for 30 iterations. Good result
+-> ./cp_log/tmpepljasc1
+
+ 11/ (checkpoint 1) 
+    same as 10, but 2 moving non-agect cars: Goal_lane variation + 2 moving non-agent cars with random 
+    initial position around agent (with deterministic action) + random agent intial position (on Start 
+    Line only)
+    - 80: /Users/huy/ray_results/DQN_MyTrack_2023-12-07_20-45-229ggh4hcs
+        ./cp_log/tmp5l1vd628
+    - +100:
+        /Users/huy/ray_results/DQN_MyTrack_2023-12-07_22-58-36ui_hap5n
+        ./cp_log/tmpwcbgi0ht
+
+
+ 11/ same as 8, but agent takes 60%

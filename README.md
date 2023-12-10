@@ -25,7 +25,7 @@ We assume full observability of the state space by the agent. Visually, a state 
         x 00 00 00 x 
 
 
-The State Space is reprresented by a dictionary with the following entries:
+The State Space is represented by a dictionary with the following entries:
 
 | Dict_Key   | Description                                         | Data Structure | Min | Max |
 |------------|-----------------------------------------------------|----------------|-----|-----|
@@ -95,13 +95,14 @@ Action space for the agent car is a Discreet space with 8 possible values:
 We use Deep Q Network (DQN). It is an off-policy action-value-estimation method.
 
 We are going to use the ray rllib implementation with default configuration.
+(Playing Atari with Deep Reinforcement Learning. Volodymyr Mnih et al.)
 
 ## Starting State [if applicable]
 <!-- See the Cart Pole Env example https://gymnasium.farama.org/environments/classic_control/cart_pole/ -->
 
 The successfully trained agent's starting state that has the most variability factors is one where there are:
 1. Goal_lane variation (goal_lane randomly chosen for each episode).
-2. Two moving non-agent cars with random initial position around agent (with deterministic action).
+2. Two moving non-agent cars with random initial position around agent (with deterministic action, i.e AI random action probability is 0).
 3. Random agent intial position (which is located on Start Line only).
 4. Fixed locations of 4 stationary cars.
 
@@ -125,7 +126,7 @@ An example of a starting state is:
 - We trained the agent on the environment with starting state described as above. It is shown that the DQN agent is robust in learning in a dynamic environment, as long as sufficient state information are given (to satisfy Markov property). We trained the agent first for 80 iterations, starting from another trained agent that is already robust in an environment similar to one described in the Starting State section except with only one non-agent moving car (which explains why agent obtains good mean returns so fast as shown in the graph), then another time for 100 iterations starting from the 80-iteration-trained algorithm.
 - To see a demonstration of the performance of the agent, run `intro-custom-env-and-ray/testcar.py`.
 - The complete log of training history as well as associated algorithm files are recorded in `./train_log.txt`.
-- Although beyond the scope of the best trained agent studied here, we surmise that the agent will also learn successfully when we introduce more variability like AI cars' random actions, random positions on stationary cars on row 3 and 6, using more (and variable number of) non-agent cars, expanding map size....
+- Although beyond the scope of the best trained agent studied here, we surmise that the agent will also learn successfully when we introduce more variability like AI cars' random actions, random positions on stationary cars on row 3 and 6, using more (and variable number of) non-agent cars, expanding map size, limitting agent row observability,....
 
 
 Plot of mean returns over iteration for the first 80-iteration agent:
